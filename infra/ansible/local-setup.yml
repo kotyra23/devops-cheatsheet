@@ -1,0 +1,46 @@
+---
+- name: Настройка локального окружения для DevOps Cheatsheet
+  hosts: localhost
+  connection: local
+  become: yes
+  vars:
+    required_packages:
+      - docker.io
+      - docker-compose-plugin
+      - python3
+      - python3-pip
+      - python3-venv
+      - git
+      - curl
+
+  tasks:
+    - name: Обновление кэша apt
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Установка необходимых пакетов
+      apt:
+        name: "{{ required_packages }}"
+        state: present
+
+    - name: Добавление текущего пользователя в группу docker
+      user:
+        name: "{{ ansible_user_id }}"
+        groups: docker
+        append: yes
+
+    - name: Запуск и включение сервиса Docker
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Проверка версии Docker
+      command: docker --version
+      register: docker_version
+      changed_when: false
+
+    - name: Вывод версии Docker
+      debug:
+        msg: "Docker успешно установлен: {{ docker_version.stdout }}"

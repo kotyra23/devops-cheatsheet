@@ -1,0 +1,16 @@
+[flake8]
+# Исключаем папки, которые не нужно проверять
+exclude =
+    .git,
+    __pycache__,
+    venv,
+    .venv,
+    docs,
+    infra,
+    *.egg-info
+
+# Максимальная длина строки
+max-line-length = 100
+
+# Игнорируем конфликты с Black (пробелы вокруг срезов)
+extend-ignore = E203
