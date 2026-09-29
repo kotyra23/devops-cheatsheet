@@ -1,0 +1,11 @@
+groups:
+  - name: flask_app_alerts
+    rules:
+      - alert: FlaskAppDown
+        expr: up{job="flask_app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Flask приложение недоступно"
+          description: "Приложение не отвечает уже более 1 минуты"
